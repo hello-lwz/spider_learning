@@ -5,9 +5,13 @@ from lxml import etree
 class spider:
     def __init__(self):
         self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
+        self.url = 'http://tieba.baidu.com/mo/q---F5237104801464AE3DDE5DC245293218%3AFG%3D1--1-1-0--2--wapp_1550217457649_235/m?kw=qq%E5%8D%8E%E5%A4%8F&lp=5011&lm=&pn={}'
 
-    def parse_url(self,i): # 发送请求 获取响应
-        url = 'http://tieba.baidu.com/mo/q---F5237104801464AE3DDE5DC245293218%3AFG%3D1--1-1-0--2--wapp_1550217457649_235/m?kw=qq%E5%8D%8E%E5%A4%8F&lp=5011&lm=&pn={}'.format(i)
+    def get_url_list(self):
+        '''准备url地址的列表'''
+        return [self.url.format(i*10) for i in range(10)]
+
+    def parse_url(self,url): # 发送请求 获取响应
         response = requests.get(url,headers=self.headers)
         html_str = response.content
         return html_str
@@ -29,8 +33,9 @@ class spider:
             print(content)
 
     def run(self):
-        for i in range(10):
-            html_str = self.parse_url(i*10)
+        url_list = self.get_url_list()
+        for url in url_list:
+            html_str = self.parse_url(url)
             content_list = self.get_data(html_str)
             self.save_content_list(content_list)
 
