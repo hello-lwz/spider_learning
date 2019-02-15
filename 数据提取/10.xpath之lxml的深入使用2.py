@@ -9,14 +9,13 @@ text = '''<div> <ul>
 </ul> </div>'''
 
 html = etree.HTML(text)
-href_list = html.xpath('//li[@class="item-1"]/a')
-print(href_list)
-title_list = html.xpath('//li[@class="item-1"]/a/text()')
-# print(title_list)
-# 这样取可能有的值取不到 则会发生错位 深入使用2会处理这个问题
+
+# 获取li的列表
+li_list = html.xpath('//li[@class="item-1"]')
+
 #组装成字典
-# for href in href_list:
-#     item={}
-#     item['href'] = href
-#     item['title'] = title_list[href_list.index(href)]
-#     print(item)
+for li in li_list:
+    item = {}
+    item['href'] = li.xpath('./a/@href')[0] if len(li.xpath('./a/@href')) > 0 else None
+    item['title'] = li.xpath('./a/text()')[0] if len(li.xpath('./a/text()')) > 0 else None
+    print(item)
